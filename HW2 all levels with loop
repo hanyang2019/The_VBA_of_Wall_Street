@@ -1,0 +1,99 @@
+Sub allsheets()
+Dim ws As Worksheet
+For Each ws In Worksheets
+ws.Activate
+Call Stock
+Next ws
+End Sub
+
+Sub Stock()
+Dim ticker_label As String
+Dim ticker_label_row As Integer '# of records in each spreedsheet
+Dim total_volumn As Double
+Dim open_price As Double
+Dim close_price As Double
+Dim total_row_number As Double
+Dim i As Double
+Dim year_change As Double
+Dim percentage As Double
+Dim Max_in As Double
+Dim Max_de As Double
+Dim Max_total_volumn As Double
+Dim New_ticker_label_row As Integer 'the number of rows of generated ticker column
+Range("J1").Value = "Ticker"
+Range("K1").Value = "Yearly Change"
+Range("L1").Value = "Percentage Change"
+Range("M1").Value = "Total Stock Volumn"
+Range("O2").Value = "Greatest % Increase"
+Range("O3").Value = "Greatest % Decrease"
+Range("O4").Value = "Greatest Total Volumn"
+Range("P1").Value = "Ticker"
+Range("Q1").Value = "Value"
+
+Max_in = Cells(2, 11).Value
+Max_de = Cells(2, 11).Value
+Max_total_volumn = Cells(2, 13).Value
+
+Range("A2").Select
+Range(Selection, Selection.End(xlDown)).Select
+total_row_number = Application.WorksheetFunction.CountA(Selection)
+'MsgBox (Str(total_row_number))
+ticker_label_row = 2
+total_volumn = 0
+open_price = Cells(2, 3).Value
+For i = 2 To total_row_number + 1
+    
+    If Cells(i, 1).Value <> Cells(i + 1, 1).Value Then
+    ticker_label = Cells(i, 1).Value
+    close_price = Cells(i, 5).Value
+    Range("J" & ticker_label_row).Value = ticker_label
+    Range("M" & ticker_label_row).Value = total_volumn
+    'Range("L" & ticker_label_row).Value = open_price
+    'Range("N" & ticker_label_row).Value = close_price
+    year_change = close_price - open_price
+    Range("K" & ticker_label_row).Value = year_change
+        If year_change >= 0 Then
+        Range("K" & ticker_label_row).Interior.ColorIndex = 4
+        Else
+        Range("K" & ticker_label_row).Interior.ColorIndex = 3
+        End If
+    If open_price > 0 Then 'remove ticker whose open price is 0 that would result in overflow error
+    percentage = year_change / open_price
+    Range("L" & ticker_label_row).Value = percentage
+    Range("L" & ticker_label_row).NumberFormat = "0.00%"
+    open_price = Cells(i + 1, 3).Value
+    End If
+    ticker_label_row = ticker_label_row + 1
+    total_volumn = 0
+    Else
+    total_volumn = total_volumn + Cells(i, 7).Value
+    End If
+Next i
+
+Range("J2").Select
+Range(Selection, Selection.End(xlDown)).Select
+New_ticker_label_row = Application.WorksheetFunction.CountA(Selection)
+'MsgBox (Str(New_ticker_label_row))
+
+For i = 2 To New_ticker_label_row + 1
+    If Cells(i, 12).Value > Max_in Then
+    Max_in = Cells(i, 12).Value
+    Cells(2, 17).Value = Max_in
+    Cells(2, 17).NumberFormat = "0.00%"
+    Cells(2, 16).Value = Cells(i, 10).Value
+    ElseIf Cells(i, 12).Value < Max_de Then
+    Max_de = Cells(i, 12).Value
+    Cells(3, 17).Value = Max_de
+    Cells(3, 17).NumberFormat = "0.00%"
+    Cells(3, 16).Value = Cells(i, 10).Value
+    End If
+Next i
+
+For i = 2 To New_ticker_label_row + 1
+    If Cells(i, 13).Value > Max_toal_volumn Then
+    Max_toal_volumn = Cells(i, 13).Value
+    Cells(4, 17).Value = Max_toal_volumn
+    Cells(4, 16).Value = Cells(i, 10).Value
+    End If
+Next i
+End Sub
