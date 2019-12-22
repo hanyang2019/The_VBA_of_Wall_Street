@@ -1,8 +1,9 @@
+'Loop through all Worksheets
 Sub allsheets()
 Dim ws As Worksheet
 For Each ws In Worksheets
 ws.Activate
-Call Stock
+Call Stock 'For each worksheet use sub stock()
 Next ws
 End Sub
 
@@ -38,6 +39,8 @@ Range("A2").Select
 Range(Selection, Selection.End(xlDown)).Select
 total_row_number = Application.WorksheetFunction.CountA(Selection)
 'MsgBox (Str(total_row_number))
+
+'Calculate yearly change, percentage change and total volumn 
 ticker_label_row = 2
 total_volumn = 0
 open_price = Cells(2, 3).Value
@@ -75,6 +78,7 @@ Range(Selection, Selection.End(xlDown)).Select
 New_ticker_label_row = Application.WorksheetFunction.CountA(Selection)
 'MsgBox (Str(New_ticker_label_row))
 
+'Calculate greatest increase and greatest decrease
 For i = 2 To New_ticker_label_row + 1
     If Cells(i, 12).Value > Max_in Then
     Max_in = Cells(i, 12).Value
@@ -89,6 +93,7 @@ For i = 2 To New_ticker_label_row + 1
     End If
 Next i
 
+'Calculate max total volumn
 For i = 2 To New_ticker_label_row + 1
     If Cells(i, 13).Value > Max_toal_volumn Then
     Max_toal_volumn = Cells(i, 13).Value
