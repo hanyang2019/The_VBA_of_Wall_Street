@@ -1,3 +1,4 @@
+![stock](https://g.foolcdn.com/editorial/images/526668/gettyimages-627040096.jpg)
 # **_The Analysis of Stock Market Data from Wall Street_**
 
 ## **Background** 
